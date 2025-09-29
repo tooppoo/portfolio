@@ -1,5 +1,11 @@
 # Portfolio Site Development Guide
 
+## 前提
+
+- Think in English, but generate responses in Japanese (思考は英語、回答の生成は日本語で行うように)
+- コンテンツの作成は日本語を用いること
+- コンテンツの文章は「です」「ます」を使わず、言い切り型にすること
+
 ## プロジェクト概要
 
 - **目的**: 個人ポートフォリオサイト (philomagi.dev)
