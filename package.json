@@ -20,6 +20,8 @@
 	},
 	"dependencies": {
 		"@astrojs/cloudflare": "12.6.9",
+		"@astrojs/mdx": "4.3.6",
+		"@astrojs/sitemap": "3.6.0",
 		"astro": "5.14.1"
 	},
 	"devDependencies": {

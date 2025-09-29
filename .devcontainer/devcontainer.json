@@ -51,7 +51,8 @@
         "Vue.volar",
         "Anthropic.claude-code",
         "jebbs.plantuml",
-        "astro-build.astro-vscode"
+        "astro-build.astro-vscode",
+        "unifiedjs.vscode-mdx"
       ],
       "settings": {
         "typescript.tsdk": "node_modules/typescript/lib",
