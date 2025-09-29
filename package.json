@@ -1,13 +1,30 @@
 {
-  "name": "portfolio",
-  "version": "1.0.0",
-  "description": "personal portofolio page",
-  "private": true,
-  "packageManager": "pnpm@10.17.1",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "philomagi <tooppoo56@gmail.com>",
-  "license": "NONE"
+	"name": "portfolio",
+	"type": "module",
+	"version": "0.0.1",
+	"private": true,
+	"author": {
+		"name": "philomagi",
+		"email": "tooppoo56@gmail.com",
+		"url": "https://philomagi.dev"
+	},
+	"packageManager": "pnpm@10.17.1",
+	"scripts": {
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro build && wrangler dev",
+		"astro": "astro",
+		"deploy": "astro build && wrangler deploy",
+		"cf-typegen": "wrangler types"
+	},
+	"dependencies": {
+		"@astrojs/cloudflare": "12.6.9",
+		"astro": "5.14.1"
+	},
+	"devDependencies": {
+		"@types/node": "24.5.2",
+		"markdownlint-cli2": "^0.18.1",
+		"wrangler": "4.40.2"
+	},
+	"license": "UNLICENSED"
 }
