@@ -15,7 +15,8 @@
 		"preview": "astro build && wrangler dev",
 		"astro": "astro",
 		"deploy": "astro build && wrangler deploy",
-		"cf-typegen": "wrangler types"
+		"cf-typegen": "wrangler types",
+		"md:lint": "markdownlint-cli2"
 	},
 	"dependencies": {
 		"@astrojs/cloudflare": "12.6.9",
@@ -24,6 +25,7 @@
 	"devDependencies": {
 		"@types/node": "24.5.2",
 		"markdownlint-cli2": "^0.18.1",
+		"markdownlint-cli2-formatter-pretty": "^0.0.8",
 		"wrangler": "4.40.2"
 	},
 	"license": "UNLICENSED"
