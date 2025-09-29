@@ -50,7 +50,8 @@
         "redhat.vscode-yaml",
         "Vue.volar",
         "Anthropic.claude-code",
-        "jebbs.plantuml"
+        "jebbs.plantuml",
+        "astro-build.astro-vscode"
       ],
       "settings": {
         "typescript.tsdk": "node_modules/typescript/lib",
