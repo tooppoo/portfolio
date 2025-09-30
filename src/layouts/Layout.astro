@@ -319,18 +319,21 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
           <!-- Desktop Navigation -->
           <div class="hidden md:flex items-center space-x-8">
-            {siteConfig.navigation.map((item) => (
-              <a
-                href={item.href}
-                class="text-gray-300 hover:text-white transition-colors"
-              >
-                {item.label}
-              </a>
-            ))}
+            {
+              siteConfig.navigation.map((item) => (
+                <a
+                  href={item.href}
+                  class="text-gray-300 hover:text-white transition-colors"
+                >
+                  {item.label}
+                </a>
+              ))
+            }
           </div>
 
           <!-- Mobile Menu Button -->
           <button
+            id="mobile-menu-button"
             class="md:hidden text-gray-300 hover:text-white transition-colors"
             aria-label="Toggle menu"
           >
@@ -349,6 +352,25 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
           </button>
         </div>
       </nav>
+
+      <!-- Mobile Menu -->
+      <div
+        id="mobile-menu"
+        class="hidden md:hidden bg-gray-900 border-b border-gray-800"
+      >
+        <div class="container mx-auto px-4 py-4 space-y-4">
+          {
+            siteConfig.navigation.map((item) => (
+              <a
+                href={item.href}
+                class="block text-gray-300 hover:text-white transition-colors py-2"
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
     </header>
 
     <!-- Main Content -->
@@ -371,28 +393,35 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
           <div>
             <h4 class="font-medium mb-4">Links</h4>
             <ul class="space-y-2 text-sm text-gray-400">
-              {siteConfig.navigation.map((item) => (
-                <li>
-                  <a href={item.href} class="hover:text-white transition-colors">
-                    {item.label}
-                  </a>
-                </li>
-              ))}
+              {
+                siteConfig.navigation.map((item) => (
+                  <li>
+                    <a
+                      href={item.href}
+                      class="hover:text-white transition-colors"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))
+              }
             </ul>
           </div>
           <div>
             <h4 class="font-medium mb-4">Connect</h4>
             <ul class="space-y-2 text-sm text-gray-400">
-              {siteConfig.social.map((item) => (
-                <li>
-                  <a
-                    href={item.href}
-                    class="hover:text-white transition-colors"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
+              {
+                siteConfig.social.map((item) => (
+                  <li>
+                    <a
+                      href={item.href}
+                      class="hover:text-white transition-colors"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))
+              }
             </ul>
           </div>
         </div>
@@ -409,6 +438,24 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       document.addEventListener("DOMContentLoaded", () => {
         // Add loading animation
         document.body.classList.add("animate-fade-in");
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        if (mobileMenuButton && mobileMenu) {
+          mobileMenuButton.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+          });
+
+          // Close mobile menu when clicking on a link
+          const mobileMenuLinks = mobileMenu.querySelectorAll("a");
+          mobileMenuLinks.forEach((link) => {
+            link.addEventListener("click", () => {
+              mobileMenu.classList.add("hidden");
+            });
+          });
+        }
 
         // Add smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
