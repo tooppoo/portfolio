@@ -2,13 +2,20 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 
-// Get all articles from the armoredcore collection
-const allArticles = await getCollection('armoredcore');
+// Get all articles from all collections
+const armoredcoreArticles = await getCollection('armoredcore');
+const techArticles = await getCollection('tech');
+
+// Combine all articles
+const allArticles = [...armoredcoreArticles, ...techArticles];
 
 // Sort articles by publish date (newest first)
 const sortedArticles = allArticles.sort(
   (a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
 );
+
+// Get unique categories for filtering
+const categories = [...new Set(allArticles.map(article => article.data.category))];
 
 const pageTitle = 'Articles - Philomagi.dev';
 const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。主にアーマードコア6やプログラミングについて書いています。';
@@ -30,20 +37,39 @@ const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。�
       </p>
     </header>
 
+    <!-- Category Filter -->
+    <section class="flex flex-wrap gap-3 justify-center" id="category-filter">
+      <button
+        data-category="all"
+        class="category-btn category-btn-active px-6 py-3 rounded-lg transition-all duration-300 font-medium tracking-wide uppercase text-sm"
+      >
+        すべて
+      </button>
+      {categories.map((category) => (
+        <button
+          data-category={category}
+          class="category-btn category-btn-inactive px-6 py-3 rounded-lg transition-all duration-300 font-medium tracking-wide uppercase text-sm"
+        >
+          {category}
+        </button>
+      ))}
+    </section>
+
     <!-- Articles Grid -->
     <section class="space-y-8">
-      {sortedArticles.length === 0 ? (
-        <div class="text-center py-12">
-          <p class="text-gray-400 text-lg">まだ記事がありません。</p>
-        </div>
-      ) : (
-        <div class="grid gap-8 md:gap-12">
-          {sortedArticles.map((article) => {
+      <div id="no-articles" class="text-center py-12 hidden">
+        <p class="text-gray-400 text-lg">該当する記事がありません。</p>
+      </div>
+      <div id="articles-grid" class="grid gap-8 md:gap-12">
+        {sortedArticles.map((article) => {
             const { slug } = article;
             const { title, description, publishDate, category, tags } = article.data;
 
             return (
-              <article class="group border border-gray-800 rounded-lg p-6 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10">
+              <article
+                class="article-item group border border-gray-800 rounded-lg p-6 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
+                data-category={category}
+              >
                 <div class="space-y-4">
                   <!-- Article Header -->
                   <div class="space-y-2">
@@ -113,7 +139,6 @@ const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。�
             );
           })}
         </div>
-      )}
     </section>
 
     <!-- Back to Home -->
@@ -150,4 +175,80 @@ const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。�
   article:hover {
     background: linear-gradient(135deg, rgba(31, 41, 55, 0.9) 0%, rgba(17, 24, 39, 0.9) 100%);
   }
+
+  .article-item.hidden {
+    display: none;
+  }
+
+  /* Category button styles */
+  .category-btn-active {
+    background: linear-gradient(135deg, rgb(6 182 212) 0%, rgb(8 145 178) 100%);
+    color: white;
+    border: 1px solid rgb(6 182 212);
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+    transform: translateY(0);
+  }
+
+  .category-btn-active:hover {
+    background: linear-gradient(135deg, rgb(8 145 178) 0%, rgb(6 182 212) 100%);
+    box-shadow: 0 6px 16px rgba(6, 182, 212, 0.35);
+    transform: translateY(-1px);
+  }
+
+  .category-btn-inactive {
+    background: rgb(17 24 39);
+    color: rgb(156 163 175);
+    border: 1px solid rgb(55 65 81);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(0);
+  }
+
+  .category-btn-inactive:hover {
+    background: rgb(31 41 55);
+    color: rgb(209 213 219);
+    border-color: rgb(75 85 99);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
+  }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    const articleItems = document.querySelectorAll('.article-item');
+    const noArticlesMessage = document.getElementById('no-articles');
+
+    categoryButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const selectedCategory = this.getAttribute('data-category');
+
+        // Update button states
+        categoryButtons.forEach(btn => {
+          btn.classList.remove('category-btn-active');
+          btn.classList.add('category-btn-inactive');
+        });
+        this.classList.remove('category-btn-inactive');
+        this.classList.add('category-btn-active');
+
+        // Filter articles
+        let visibleCount = 0;
+        articleItems.forEach(article => {
+          const articleCategory = article.getAttribute('data-category');
+          if (selectedCategory === 'all' || articleCategory === selectedCategory) {
+            article.classList.remove('hidden');
+            visibleCount++;
+          } else {
+            article.classList.add('hidden');
+          }
+        });
+
+        // Show/hide no articles message
+        if (visibleCount === 0) {
+          noArticlesMessage.classList.remove('hidden');
+        } else {
+          noArticlesMessage.classList.add('hidden');
+        }
+      });
+    });
+  });
+</script>

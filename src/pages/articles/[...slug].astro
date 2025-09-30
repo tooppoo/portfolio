@@ -3,16 +3,18 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 
 export async function getStaticPaths() {
-  const articles = await getCollection("armoredcore");
+  const armoredcoreArticles = await getCollection("armoredcore");
+  const techArticles = await getCollection("tech");
+  const allArticles = [...armoredcoreArticles, ...techArticles];
 
-  return articles.map((article) => ({
+  return allArticles.map((article) => ({
     params: { slug: article.slug },
     props: { article },
   }));
 }
 
 interface Props {
-  article: CollectionEntry<"armoredcore">;
+  article: CollectionEntry<"armoredcore"> | CollectionEntry<"tech">;
 }
 
 const { article } = Astro.props;
