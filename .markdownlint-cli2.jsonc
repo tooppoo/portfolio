@@ -10,6 +10,7 @@
   ],
   "config": {
     "first-line-h1": false,
-    "line-length": false
+    "line-length": false,
+    "no-inline-html": false
   }
 }
