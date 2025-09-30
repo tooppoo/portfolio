@@ -1,0 +1,153 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+
+// Get all articles from the armoredcore collection
+const allArticles = await getCollection('armoredcore');
+
+// Sort articles by publish date (newest first)
+const sortedArticles = allArticles.sort(
+  (a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+);
+
+const pageTitle = 'Articles - Philomagi.dev';
+const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。主にアーマードコア6やプログラミングについて書いています。';
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  type="website"
+>
+  <div class="space-y-12">
+    <!-- Page Header -->
+    <header class="text-center space-y-4">
+      <h1 class="text-5xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+        Articles
+      </h1>
+      <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+        ゲーム、技術、哲学に関する記事を書いています。
+      </p>
+    </header>
+
+    <!-- Articles Grid -->
+    <section class="space-y-8">
+      {sortedArticles.length === 0 ? (
+        <div class="text-center py-12">
+          <p class="text-gray-400 text-lg">まだ記事がありません。</p>
+        </div>
+      ) : (
+        <div class="grid gap-8 md:gap-12">
+          {sortedArticles.map((article) => {
+            const { slug } = article;
+            const { title, description, publishDate, category, tags } = article.data;
+
+            return (
+              <article class="group border border-gray-800 rounded-lg p-6 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10">
+                <div class="space-y-4">
+                  <!-- Article Header -->
+                  <div class="space-y-2">
+                    <div class="flex flex-wrap gap-2 items-center text-sm">
+                      <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full font-medium">
+                        {category}
+                      </span>
+                      <time
+                        datetime={publishDate.toISOString()}
+                        class="text-gray-400"
+                      >
+                        {publishDate.toLocaleDateString('ja-JP', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </time>
+                    </div>
+
+                    <h2 class="text-2xl font-semibold text-white group-hover:text-cyan-400 transition-colors">
+                      <a href={`/articles/${slug}`} class="hover:no-underline">
+                        {title}
+                      </a>
+                    </h2>
+                  </div>
+
+                  <!-- Article Description -->
+                  <p class="text-gray-300 text-lg leading-relaxed">
+                    {description}
+                  </p>
+
+                  <!-- Tags -->
+                  {tags && tags.length > 0 && (
+                    <div class="flex flex-wrap gap-2">
+                      {tags.map((tag) => (
+                        <span class="px-2 py-1 text-sm bg-gray-800 text-gray-300 rounded border border-gray-700">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <!-- Read More Link -->
+                  <div class="pt-2">
+                    <a
+                      href={`/articles/${slug}`}
+                      class="inline-flex items-center text-cyan-400 hover:text-cyan-300 font-medium transition-colors group"
+                    >
+                      記事を読む
+                      <svg
+                        class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
+    </section>
+
+    <!-- Back to Home -->
+    <div class="text-center pt-8">
+      <a
+        href="/"
+        class="inline-flex items-center text-gray-400 hover:text-white transition-colors"
+      >
+        <svg
+          class="mr-2 w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        ホームに戻る
+      </a>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* Custom styles for articles page */
+  article {
+    background: linear-gradient(135deg, rgba(31, 41, 55, 0.8) 0%, rgba(17, 24, 39, 0.8) 100%);
+  }
+
+  article:hover {
+    background: linear-gradient(135deg, rgba(31, 41, 55, 0.9) 0%, rgba(17, 24, 39, 0.9) 100%);
+  }
+</style>
