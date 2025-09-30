@@ -12,7 +12,7 @@
 		"global_fetch_strictly_public"
 	],
 	"assets": {
-		"binding": "ASSETS",
+		// "binding": "ASSETS", // workerから参照したくなったら追加
 		"directory": "./dist"
 	},
 	"observability": {
