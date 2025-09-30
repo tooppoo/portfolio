@@ -6,9 +6,36 @@ export interface Props {
   type?: "website" | "article";
 }
 
+// Site configuration - centralized site metadata and navigation
+const siteConfig = {
+  name: "Philomagi.dev",
+  tagline: "ソフトウェア、哲学、AC",
+  defaultDescription: "Web開発、デザイン、技術記事",
+  navigation: [
+    {
+      label: "Articles",
+      href: "/articles",
+    },
+  ],
+  social: [
+    {
+      label: "GitHub",
+      href: "https://github.com/philomagi",
+    },
+    {
+      label: "Twitter",
+      href: "https://twitter.com/philomagi",
+    },
+    {
+      label: "Email",
+      href: "mailto:tooppoo56@gmail.com",
+    },
+  ],
+} as const;
+
 const {
-  title = "Philomagi.dev",
-  description = "Web開発、デザイン、技術記事",
+  title = siteConfig.name,
+  description = siteConfig.defaultDescription,
   image = "/og-image.jpg",
   type = "website",
 } = Astro.props;
@@ -287,16 +314,19 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
             href="/"
             class="text-xl font-bold text-primary-500 hover:text-primary-400 transition-colors"
           >
-            Philomagi.dev
+            {siteConfig.name}
           </a>
 
           <!-- Desktop Navigation -->
           <div class="hidden md:flex items-center space-x-8">
-            <a
-              href="/articles"
-              class="text-gray-300 hover:text-white transition-colors"
-              >Articles</a
-            >
+            {siteConfig.navigation.map((item) => (
+              <a
+                href={item.href}
+                class="text-gray-300 hover:text-white transition-colors"
+              >
+                {item.label}
+              </a>
+            ))}
           </div>
 
           <!-- Mobile Menu Button -->
@@ -335,40 +365,34 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 class="text-lg font-semibold mb-4">Philomagi.dev</h3>
-            <p class="text-gray-400 text-sm">ソフトウェア、哲学、AC</p>
+            <h3 class="text-lg font-semibold mb-4">{siteConfig.name}</h3>
+            <p class="text-gray-400 text-sm">{siteConfig.tagline}</p>
           </div>
           <div>
             <h4 class="font-medium mb-4">Links</h4>
             <ul class="space-y-2 text-sm text-gray-400">
-              <li>
-                <a href="/articles" class="hover:text-white transition-colors"
-                  >Articles</a
-                >
-              </li>
+              {siteConfig.navigation.map((item) => (
+                <li>
+                  <a href={item.href} class="hover:text-white transition-colors">
+                    {item.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
           <div>
             <h4 class="font-medium mb-4">Connect</h4>
             <ul class="space-y-2 text-sm text-gray-400">
-              <li>
-                <a
-                  href="https://github.com/philomagi"
-                  class="hover:text-white transition-colors">GitHub</a
-                >
-              </li>
-              <li>
-                <a
-                  href="https://twitter.com/philomagi"
-                  class="hover:text-white transition-colors">Twitter</a
-                >
-              </li>
-              <li>
-                <a
-                  href="mailto:tooppoo56@gmail.com"
-                  class="hover:text-white transition-colors">Email</a
-                >
-              </li>
+              {siteConfig.social.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    class="hover:text-white transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
