@@ -5,7 +5,8 @@ import Layout from "../../layouts/Layout.astro";
 export async function getStaticPaths() {
   const armoredcoreArticles = await getCollection("armoredcore");
   const techArticles = await getCollection("tech");
-  const allArticles = [...armoredcoreArticles, ...techArticles];
+  const philosophyArticles = await getCollection("philosophy");
+  const allArticles = [...armoredcoreArticles, ...techArticles, ...philosophyArticles];
 
   return allArticles.map((article) => ({
     params: { slug: article.slug },
@@ -14,7 +15,7 @@ export async function getStaticPaths() {
 }
 
 interface Props {
-  article: CollectionEntry<"armoredcore"> | CollectionEntry<"tech">;
+  article: CollectionEntry<"armoredcore"> | CollectionEntry<"tech"> | CollectionEntry<"philosophy">;
 }
 
 const { article } = Astro.props;

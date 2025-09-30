@@ -5,9 +5,10 @@ import Layout from '../layouts/Layout.astro';
 // Get all articles from all collections
 const armoredcoreArticles = await getCollection('armoredcore');
 const techArticles = await getCollection('tech');
+const philosophyArticles = await getCollection('philosophy');
 
 // Combine all articles
-const allArticles = [...armoredcoreArticles, ...techArticles];
+const allArticles = [...armoredcoreArticles, ...techArticles, ...philosophyArticles];
 
 // Sort articles by publish date (newest first)
 const sortedArticles = allArticles.sort(

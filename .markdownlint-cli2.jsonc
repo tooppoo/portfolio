@@ -2,7 +2,7 @@
   "fix": true,
   "globs": [
     "*.md",
-    "src/**/*.md",
+    "src/**/*.mdx",
     ".github/**/*.md"
   ],
   "outputFormatters": [

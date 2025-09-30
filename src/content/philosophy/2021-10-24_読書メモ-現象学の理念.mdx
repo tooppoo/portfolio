@@ -1,0 +1,126 @@
+---
+title: '読書メモ - 現象学の理念'
+description: 'フッサール『現象学の理念』の一節を原文と比較しながら整理。認識論が持つべき認識についての分析'
+publishDate: 2021-10-24
+category: 'philosophy'
+tags: ['哲学', 'フッサール', '現象学']
+---
+
+[フッサール](http://d.hatena.ne.jp/keyword/%A5%D5%A5%C3%A5%B5%A1%BC%A5%EB)、[長谷川宏](http://d.hatena.ne.jp/keyword/%C4%B9%C3%AB%C0%EE%B9%A8) 訳『[現象学](http://d.hatena.ne.jp/keyword/%B8%BD%BE%DD%B3%D8)の理念』p.5
+
+「いずれにせよ、認識論が認識の可能性に目をむけようとすれば、(...)認識されていなければならない。」の範囲を、原文を比較しながら整理した。
+
+認識論が「認識の可能性」という問題をその範囲で扱う場合に、認識論が持つ(haben)べき諸認識(Erkenntnisse)について。
+
+「それ自身として疑う余地の無い(zweifellos)認識可能性(Erkenntnismöglichkeiten)」というものについての諸認識
+
+しかもこの諸認識は、最も精確な意味における(im prägnantesten Sinn)ものであり、その妥当性は、それら諸認識自らの内にある(, denen Triftigkeit eignet)ようなもの
+
+妥当性が決して疑い得ない、諸認識そのものの認識可能性(> eigene Erkenntnismöglichkeit)についての諸認識
+
+認識論が認識の可能性に目を向けようとする際の、認識論が持つべき認識
+
+  ソース
+
+```plantuml
+@startuml 現象学の理念
+hide empty members
+hide circle
+
+node 認識論 as ErkTheorie {
+  [Erkenntnistheorie]
+}
+
+node 認識 as recog {
+  [das Erkenntnis]
+}
+node 認識作用 as  LdE {
+  [Leistung der Erkenntnis]
+}
+node 認識作用の可能性 as dMiL {
+  [die Möglichkeit ihrer Leistung]
+}
+
+LdE -u-> recog : 成立
+dMiL -l-> LdE : 現実に成立する可能性
+ErkTheorie -u-> dMiL : 目を向ける、語る
+
+node "それ自身疑う余地のない認識可能性についての諸認識" as recogOfAbs {
+  [Erkenntnisse über Erkenntnismöglichkeiten, die als solche zweifellos sind] as __eüem
+
+  node "認識可能性" as abs_recogOfAbs {
+    [Erkenntnismöglichkeiten]
+  }
+  node "諸認識" as recog_recogOfAbs {
+    [Erkenntnisse] as __recog_recogOfAbs
+  }
+  abs_recogOfAbs -u-> recog_recogOfAbs : über
+
+  node "それ自身疑う余地のない" as EuEdasz {
+    [die als solche zweifellos sind]
+  }
+  EuEdasz -u-> abs_recogOfAbs
+
+  __eüem -[hidden]-> recog_recogOfAbs
+
+  node "しかも、最も精確な意味における、妥当性のある諸認識" as uzEipSdTe {
+    [und zwar Erkenntnisse im prägnantesten Sinn, denen Triftigkeit eignet] as __uzEipSdTe
+
+    node もっとも精確(prägnantensten)な意味における as ipS {
+      [im prägnantesten Sinn]
+    }
+    node "妥当性のある" as dTe {
+      [denen Triftigkeit eignet]
+    }
+    __uzEipSdTe -[hidden]-> ipS
+    ipS -[hidden]-> dTe
+  }
+  uzEipSdTe -u-> recog_recogOfAbs
+}
+
+node "もっとも精確(prägnantensten)な意味における、妥当性のある諸認識" as EipS {
+}
+
+node "妥当性が絶対に疑えないような、認識そのものの認識可能性についての諸認識" as EüieEdTazi {
+  [und (Erkenntnisse) über > eigene Erkenntnismöglichkeit, deren Triftigkeit absolut zweifellos ist] as __EüieEdTazi
+
+  node 諸認識 as recog_EüieE {
+    [(Erkenntnisse)] as __recog_recog_EüieE
+  }
+  node "諸認識そのものについての(...)認識可能性" as ieE {
+    [> eigene Erkenntnismöglichkeit] as __ieE
+    [>] as ihre
+
+    __ieE *--> ihre
+    ihre .u.> recog_EüieE
+  }
+  ieE -u-> recog_EüieE : über
+
+  node "妥当性が絶対に疑えないような" as dTazi {
+    [deren Triftigkeit absolut zweifellos ist]
+  }
+  dTazi -u-> ieE
+
+  __EüieEdTazi -[hidden]-> recog_EüieE
+}
+
+node "〜を持たなくてはならない" as haben {
+  [muss sie ~ haben über Erkenntnismöglichkeiten\nsie = die Erkentnistheorie = 認識論]
+}
+
+ErkTheorie *--> haben
+haben *--> recogOfAbs
+haben *--> EüieEdTazi
+
+@enduml
+```
+
+参照した資料
+
+[](https://www.amazon.co.jp/exec/obidos/ASIN/B01CPB8AV2/hatena-blog-22/)[Die Idee der Phänomenologie: Text nach "Husserliana", Band II (Philosophische Bibliothek 392) (German Edition)](https://www.amazon.co.jp/exec/obidos/ASIN/B01CPB8AV2/hatena-blog-22/)
+
+作者:[Husserl, Edmund](http://d.hatena.ne.jp/keyword/Husserl%2C%20Edmund)Felix Meiner Verlag[Amazon](https://www.amazon.co.jp/exec/obidos/ASIN/B01CPB8AV2/hatena-blog-22/)
+[](https://www.amazon.co.jp/exec/obidos/ASIN/4878932775/hatena-blog-22/)[現象学の理念](https://www.amazon.co.jp/exec/obidos/ASIN/4878932775/hatena-blog-22/)
+
+作者:[E. フッサール](http://d.hatena.ne.jp/keyword/E.%20%A5%D5%A5%C3%A5%B5%A1%BC%A5%EB)作品社[Amazon](https://www.amazon.co.jp/exec/obidos/ASIN/4878932775/hatena-blog-22/)
+[Die Idee der Phänomenologie | Husserl Edmund](https://ophen.org/pub-108118)

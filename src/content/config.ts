@@ -24,7 +24,20 @@ const techArchitectCollection = defineCollection({
   }),
 });
 
+const philosophyCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    publishDate: z.date().optional().default(() => new Date()),
+    category: z.string().default('philosophy'),
+    tags: z.array(z.string()).optional().default([]),
+    layout: z.string().optional().default('../layouts/Layout.astro'),
+  }),
+});
+
 export const collections = {
   armoredcore: armoredcoreCollection,
   'tech': techArchitectCollection,
+  'philosophy': philosophyCollection,
 };
