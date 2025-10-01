@@ -18,6 +18,9 @@ const sortedArticles = allArticles.sort(
 // Get unique categories for filtering
 const categories = [...new Set(allArticles.map(article => article.data.category))];
 
+// Get initial category from URL parameter
+const initialCategory = Astro.url.searchParams.get('category') || 'all';
+
 const pageTitle = 'Articles - Philomagi.dev';
 const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。主にアーマードコア6やプログラミングについて書いています。';
 ---
@@ -42,14 +45,38 @@ const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。�
     <section class="flex flex-wrap gap-3 justify-center" id="category-filter">
       <button
         data-category="all"
-        class="category-btn category-btn-active px-6 py-3 rounded-lg transition-all duration-300 font-medium tracking-wide uppercase text-sm"
+        class:list={[
+          'category-btn',
+          'px-6',
+          'py-3',
+          'rounded-lg',
+          'transition-all',
+          'duration-300',
+          'font-medium',
+          'tracking-wide',
+          'uppercase',
+          'text-sm',
+          initialCategory === 'all' ? 'category-btn-active' : 'category-btn-inactive'
+        ]}
       >
         すべて
       </button>
       {categories.map((category) => (
         <button
           data-category={category}
-          class="category-btn category-btn-inactive px-6 py-3 rounded-lg transition-all duration-300 font-medium tracking-wide uppercase text-sm"
+          class:list={[
+            'category-btn',
+            'px-6',
+            'py-3',
+            'rounded-lg',
+            'transition-all',
+            'duration-300',
+            'font-medium',
+            'tracking-wide',
+            'uppercase',
+            'text-sm',
+            initialCategory === category ? 'category-btn-active' : 'category-btn-inactive'
+          ]}
         >
           {category}
         </button>
@@ -68,7 +95,20 @@ const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。�
 
             return (
               <article
-                class="article-item group border border-gray-800 rounded-lg p-6 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
+                class:list={[
+                  'article-item',
+                  'group',
+                  'border',
+                  'border-gray-800',
+                  'rounded-lg',
+                  'p-6',
+                  'hover:border-cyan-500/50',
+                  'transition-all',
+                  'duration-300',
+                  'hover:shadow-lg',
+                  'hover:shadow-cyan-500/10',
+                  { 'hidden': initialCategory !== 'all' && category !== initialCategory }
+                ]}
                 data-category={category}
               >
                 <div class="space-y-4">
@@ -105,7 +145,7 @@ const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。�
                   <!-- Tags -->
                   {tags && tags.length > 0 && (
                     <div class="flex flex-wrap gap-2">
-                      {tags.map((tag) => (
+                      {tags.map((tag: string) => (
                         <span class="px-2 py-1 text-sm bg-gray-800 text-gray-300 rounded border border-gray-700">
                           #{tag}
                         </span>
@@ -219,37 +259,79 @@ const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。�
     const articleItems = document.querySelectorAll('.article-item');
     const noArticlesMessage = document.getElementById('no-articles');
 
-    categoryButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const selectedCategory = this.getAttribute('data-category');
-
-        // Update button states
-        categoryButtons.forEach(btn => {
+    // Filter articles by category
+    function filterArticles(selectedCategory: string) {
+      // Update button states
+      categoryButtons.forEach(btn => {
+        const btnCategory = btn.getAttribute('data-category');
+        if (btnCategory === selectedCategory) {
+          btn.classList.remove('category-btn-inactive');
+          btn.classList.add('category-btn-active');
+        } else {
           btn.classList.remove('category-btn-active');
           btn.classList.add('category-btn-inactive');
-        });
-        this.classList.remove('category-btn-inactive');
-        this.classList.add('category-btn-active');
-
-        // Filter articles
-        let visibleCount = 0;
-        articleItems.forEach(article => {
-          const articleCategory = article.getAttribute('data-category');
-          if (selectedCategory === 'all' || articleCategory === selectedCategory) {
-            article.classList.remove('hidden');
-            visibleCount++;
-          } else {
-            article.classList.add('hidden');
-          }
-        });
-
-        // Show/hide no articles message
-        if (visibleCount === 0) {
-          noArticlesMessage.classList.remove('hidden');
-        } else {
-          noArticlesMessage.classList.add('hidden');
         }
       });
+
+      // Filter articles
+      let visibleCount = 0;
+      articleItems.forEach(article => {
+        const articleCategory = article.getAttribute('data-category');
+        if (selectedCategory === 'all' || articleCategory === selectedCategory) {
+          article.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          article.classList.add('hidden');
+        }
+      });
+
+      // Show/hide no articles message
+      if (visibleCount === 0) {
+        noArticlesMessage?.classList.remove('hidden');
+      } else {
+        noArticlesMessage?.classList.add('hidden');
+      }
+    }
+
+    // Check URL parameters on page load
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
+
+    if (categoryParam) {
+      // Check if the category exists in the buttons
+      const categoryExists = Array.from(categoryButtons).some(
+        btn => btn.getAttribute('data-category') === categoryParam
+      );
+
+      if (categoryExists) {
+        filterArticles(categoryParam);
+      }
+    }
+
+    // Add click event listeners to category buttons
+    categoryButtons.forEach(button => {
+      button.addEventListener('click', function(this: HTMLButtonElement) {
+        const selectedCategory = this.getAttribute('data-category');
+
+        if (selectedCategory) {
+          // Filter articles
+          filterArticles(selectedCategory);
+
+          // Update URL
+          const newUrl = selectedCategory === 'all'
+            ? window.location.pathname
+            : `${window.location.pathname}?category=${selectedCategory}`;
+
+          window.history.pushState({ category: selectedCategory }, '', newUrl);
+        }
+      });
+    });
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const categoryParam = urlParams.get('category');
+      filterArticles(categoryParam || 'all');
     });
   });
 </script>
