@@ -1,9 +1,9 @@
 ---
 title: 'spec-kitとcc-sddの比較所感 v1'
 description: 'spec-kitとcc-sddを個人開発で'
-publishDate: 2021-09-26
+publishDate: 2025-10-20
 category: 'tech'
-tags: [オブジェクト指向']
+tags: [仕様駆動開発, AI]
 ---
 
 ## 前提
