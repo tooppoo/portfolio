@@ -8,7 +8,7 @@
 		"email": "tooppoo56@gmail.com",
 		"url": "https://philomagi.dev"
 	},
-	"packageManager": "pnpm@10.18.3",
+	"packageManager": "pnpm@10.19.0",
 	"scripts": {
 		"dev": "astro dev",
 		"build": "astro build",
