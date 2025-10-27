@@ -1,0 +1,118 @@
+---
+title: 'Bitwarden Secrets CLI(docker)での認証'
+description: 'Bitwarden Secrets CLI(docker)を使って、なるべくアクセストークンを露出させずに認証する試み'
+publishDate: 2025-10-27
+category: 'tech'
+tags: [Bitwarden, セキュリティ]
+---
+
+## Bitwarden Secrest（以下、BWS）について
+
+https://bitwarden.com/help/secrets-manager-cli/
+
+OSSパスワードマネージャBitwardenが提供する、SecretsManager.類似製品として1passwordやLastpassなど。
+
+## 動機
+
+[1Passwordを使って、ローカルにファイル(~/.configや.env)として置かれてる生のパスワードなどを削除した](https://efcl.info/2023/01/31/remove-secret-from-local/)
+
+上記記事では、1passwordを使ってローカルマシンから各種機微情報を削除しつつ、envなどを使用したローカル開発を（部分的にせよ）実現している。
+
+codexやclaude codeなどAIの使用頻度も上がってきたため、env系に限らず、こうした認証情報ファイル（特に、奪取されたときの影響が大きいもの）に対するセキュリティが気になってきた。
+そこにこの記事を見かけたため、自分が使っているBitwardenでも同じようなことができないかと考えた。
+
+BitwardenもCLIおよびSecretsManager CLIを提供していたので試そうとしてみたところ、認証の仕方で若干工夫が必要と感じたので、ここにメモしておく。
+
+## 前提
+
+- Bitwardenのアカウントを作成済み
+- Bitwarden Secretsに参加済み（プランは任意）
+
+## TL;DR
+
+- docker経由でBWSを使用
+- aliasで簡単に呼び出せるようにしておく
+- BWSのアクセストークン本体は環境変数に設定
+- "--access-token=\\$BWS_ACCESS_TOKEN" とエスケープしてaliasに追記
+
+## 手順
+
+### 1. bwsをaliasに登録
+
+Bitwarden Secrets CLIは、自分でダウンロード・インストールする方法と、Dockerを使う方法の二種類が提供されている。
+
+<https://bitwarden.com/help/secrets-manager-cli/#download-and-install>
+
+ただし、ダウンロードするファイルへの導線が明確に記載されているわけではなく、単にGitHub上のReleaseNotesへの導線が張られているのみ。正直いちいち探すのも面倒だし、バージョン管理なども面倒なので、Dockerを使う方法を選んだ。
+
+もっとも、これはこれでいちいち使うたびに `docker run` などと書きたくもないので、普段はaliasに登録して使うことにする。
+
+```sh
+alias bws="docker run --rm -it bitwarden/bws"
+```
+
+これで、普段は特に意識することなく `bws` と打てばBWS CLIが使える。
+
+```sh
+$ bws help
+Bitwarden Secrets CLI
+
+Usage: bws [OPTIONS] [COMMAND]
+
+Commands:
+  config       Configure the CLI
+  completions  Generate shell completion files
+  project      Commands available on Projects
+  secret       Commands available on Secrets
+  run          Run a command with secrets injected
+  help         Print this message or the help of the given subcommand(s)
+
+Options:
+  -o, --output <OUTPUT>              Output format [default: json] [possible values: json, yaml, env, table, tsv, none]
+  -c, --color <COLOR>                Use colors in the output [default: auto] [possible values: no, yes, auto]
+  -t, --access-token <ACCESS_TOKEN>  Specify access token for the service account [env: BWS_ACCESS_TOKEN]
+  -f, --config-file <CONFIG_FILE>    [default: ~/.config/bws/config] Config file to use [env: BWS_CONFIG_FILE=]
+  -p, --profile <PROFILE>            Profile to use from the config file [env: BWS_PROFILE=]
+  -u, --server-url <SERVER_URL>      Override the server URL from the config file [env: BWS_SERVER_URL=]
+  -h, --help                         Print help
+  -V, --version                      Print version
+```
+
+### 2. access tokenの作成
+
+BWSの管理ページにアクセスして、マシンアカウントの登録～アクセストークン発行を行う。詳細はBitwardenのマニュアルを参照。
+
+余談：個人的には、アクセストークンはいちいち削除・再登録しなくてもローテートできるようにしてほしいところ。
+
+### 3. 環境変数にaccess tokenを保存
+
+Bitwardenのドキュメントに従って、環境変数にaccess tokenを保存。
+historyに残る分は [secretlint](https://efcl.info/2023/01/03/secretlint-6/)などを使ってカバーすることになるか。
+
+### 4. BWSを呼び出すaliasに追記
+
+docker経由でBWSを使う場合、ホストマシンの環境変数に設定してあるだけでは、アクセストークンは伝播しない。
+`docker run --env` などを使って環境変数をdocker内部で実行されるBWSのプロセスに届けるか、BWSのオプション `--access-token` で直接アクセストークンを指定する必要がある。
+
+どちらを使うにしろ、いちいちアクセストークンを渡すのは面倒だし、コマンドラインやhistoryに生のアクセストークンが露出するので避けたい。
+そこでaliasに追記することになるが、単に `--access-token=$BWS_ACCESS_TOKEN` などと書いてしまうと、環境変数部分が展開されてしまうので、実際に使うとhistoryはもちろんaliasにもアクセストークンが露出してしまう。
+
+```sh
+$ alias bws="docker run --rm -it bitwarden/bws --access-token=$BWS_ACCESS_TOKEN"
+
+$ alias
+alias bws='docker run --rm -it bitwarden/bws --access-token {生のアクセストークン}'
+```
+
+そこで、aliasを設定するときは `$` をエスケープしてやることで、alias設定時にはアクセストークンは展開されず、実行時に記述の通り環境変数を参照して解決されるようになる。
+
+```diff
+- alias bws="docker run --rm -it bitwarden/bws --access-token=$BWS_ACCESS_TOKEN"
++ alias bws="docker run --rm -it bitwarden/bws --access-token=\$BWS_ACCESS_TOKEN"
+```
+
+普段遣いとしては、 `.bashrc` などに以下のaliasを貼り付けておけば良い
+
+```sh
+alias bws="docker run --rm -it bitwarden/bws --access-token=\$BWS_ACCESS_TOKEN"
+```
