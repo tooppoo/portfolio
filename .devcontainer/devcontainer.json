@@ -16,9 +16,7 @@
   },
   "containerUser": "node",
   "mounts": [
-    "type=volume,source=pnpm-store,target=/home/node/.pnpm-store",
-    "source=${localEnv:HOME}/.codex,target=/home/node/.codex,type=bind,consistency=cached",
-    "source=${localEnv:HOME}/.claude,target=/home/node/.claude,type=bind,consistency=cached"
+    "type=volume,source=pnpm-store,target=/home/node/.pnpm-store"
   ],
   "forwardPorts": [
     5173,
