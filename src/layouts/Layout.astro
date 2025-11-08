@@ -426,9 +426,25 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
           </div>
         </div>
         <div
-          class="mt-8 pt-8 border-t border-gray-800 text-center text-sm text-gray-400"
+          class="mt-8 pt-8 border-t border-gray-800 flex flex-col justify-center items-center text-sm text-gray-400"
         >
-          <p>&copy; 2025 Philomagi. All rights reserved.</p>
+          <p class="mb-3">&copy; 2025 Philomagi. All rights reserved.</p>
+
+          <div class="w-3xs">
+            <script
+              is:inline
+              type="text/javascript"
+              src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+              data-name="bmc-button"
+              data-slug="philomagi"
+              data-color="#5F7FFF"
+              data-emoji="☕"
+              data-font="Poppins"
+              data-text="Buy me a coffee"
+              data-outline-color="#000000"
+              data-font-color="#ffffff"
+              data-coffee-color="#FFDD00"></script>
+          </div>
         </div>
       </div>
     </footer>
