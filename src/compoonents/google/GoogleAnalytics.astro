@@ -1,0 +1,17 @@
+---
+const isProd = import.meta.env.MODE === "production"
+---
+{isProd
+    ? (
+        <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-JG028PWY3V"></script>
+        <script is:inline>
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){window.dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-JG028PWY3V');
+        </script>
+    )
+    : (<script is:inline>console.log("dev")</script>)
+}

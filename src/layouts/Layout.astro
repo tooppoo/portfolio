@@ -1,4 +1,6 @@
 ---
+import GoogleAnalytics from "../compoonents/google/GoogleAnalytics.astro";
+
 export interface Props {
   title?: string;
   description?: string;
@@ -10,7 +12,7 @@ export interface Props {
 const siteConfig = {
   name: "Philomagi.dev",
   tagline: "ソフトウェア、哲学、AC",
-  defaultDescription: "Web開発、デザイン、技術記事",
+  defaultDescription: "Web開発、ソフトウェア設計、技術記事",
   navigation: [
     {
       label: "Articles",
@@ -294,7 +296,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       }
     </style>
   </head>
-
+  <GoogleAnalytics />
   <body class="bg-gray-950 text-gray-50 font-sans antialiased min-h-screen">
     <!-- Skip to main content -->
     <a
