@@ -19,9 +19,9 @@
 		"md:lint": "markdownlint-cli2"
 	},
 	"dependencies": {
-		"@astrojs/mdx": "4.3.12",
+		"@astrojs/mdx": "4.3.13",
 		"@astrojs/sitemap": "3.6.0",
-		"astro": "5.16.3"
+		"astro": "5.16.5"
 	},
 	"devDependencies": {
 		"@astrojs/tailwind": "6.0.2",
