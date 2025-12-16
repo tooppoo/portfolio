@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.16.0/.schema/devbox.schema.json",
   "packages": [
-    "pnpm@10.20.0",
+    "pnpm@10.24.0",
     "nodejs@24.11.1"
   ],
   "shell": {
