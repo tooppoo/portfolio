@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="650" viewBox="0 0 900 650">
+  <!-- White background -->
+  <rect x="0" y="0" width="900" height="650" fill="#ffffff"></rect>
+
+  <style>
+    .axis { stroke: #000; stroke-width: 2; }
+    .title { font-size: 26px; font-weight: bold; font-family: sans-serif; fill: #000; }
+    .axis-label { font-size: 20px; font-family: sans-serif; fill: #000; }
+    .quadrant { font-size: 18px; font-weight: bold; font-family: sans-serif; fill: #000; }
+    .note { font-size: 16px; font-family: sans-serif; fill: #333; }
+  </style>
+
+  <!-- Title -->
+  <text x="450" y="40" text-anchor="middle" class="title">
+    わかりやすさ × 証拠性の4象限
+  </text>
+
+  <!-- Axes -->
+  <line x1="450" y1="90" x2="450" y2="600" class="axis"></line>
+  <line x1="100" y1="345" x2="800" y2="345" class="axis"></line>
+
+  <!-- Axis Labels (anchor-safe) -->
+  <!-- Right side: anchor=end so text grows leftward -->
+  <text x="800" y="375" text-anchor="end" class="axis-label">
+    わかりやすい →
+  </text>
+
+  <!-- Left side: anchor=start so text grows rightward -->
+  <text x="100" y="375" text-anchor="start" class="axis-label">
+    ← わかりにくい
+  </text>
+
+  <!-- Y axis labels -->
+  <text x="470" y="80" class="axis-label">↑ 証拠性が高い</text>
+  <text x="470" y="630" class="axis-label">証拠性が低い ↓</text>
+
+  <!-- Quadrants -->
+
+  <!-- Top Right -->
+  <text x="560" y="200" class="quadrant">
+    わかりやすい × 正しい
+  </text>
+  <text x="560" y="230" class="note">
+    充実と証拠性が両立
+  </text>
+
+  <!-- Top Left -->
+  <text x="140" y="200" class="quadrant">
+    わかりにくい × 正しい
+  </text>
+  <text x="140" y="230" class="note">
+    問いが多いが妥当
+  </text>
+
+  <!-- Bottom Right -->
+  <text x="560" y="440" class="quadrant">
+    わかりやすい × 誤り
+  </text>
+  <text x="560" y="470" class="note">
+    充実のみ成立
+  </text>
+
+  <!-- Bottom Left -->
+  <text x="140" y="440" class="quadrant">
+    わかりにくい × 誤り
+  </text>
+  <text x="140" y="470" class="note">
+    問いが錯綜
+  </text>
+
+</svg>
