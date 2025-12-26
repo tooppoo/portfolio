@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import SearchBox from '../components/search/SearchBox.astro';
 
 // Get all articles from all collections
 const armoredcoreArticles = await getCollection('armoredcore');
@@ -42,6 +43,9 @@ const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。�
         ゲーム、技術、哲学に関する記事を書いています。
       </p>
     </header>
+
+    <!-- Search Box -->
+    <SearchBox />
 
     <!-- Category Filter -->
     <section class="flex flex-wrap gap-3 justify-center" id="category-filter">
@@ -112,6 +116,8 @@ const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。�
                   { 'hidden': initialCategory !== 'all' && category !== initialCategory }
                 ]}
                 data-category={category}
+                data-title={title.toLowerCase()}
+                data-tags={tags ? tags.join(',').toLowerCase() : ''}
               >
                 <div class="space-y-4">
                   <!-- Article Header -->
