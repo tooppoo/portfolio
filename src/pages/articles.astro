@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import SearchBox from '../components/search/SearchBox.astro';
+import ArticleSearch from '../components/search/ArticleSearch';
 
 // Get all articles from all collections
 const armoredcoreArticles = await getCollection('armoredcore');
@@ -18,11 +18,15 @@ const sortedArticles = allArticles.sort(
   (a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
 );
 
-// Get unique categories for filtering
-const categories = [...new Set(allArticles.map(article => article.data.category))];
-
-// Get initial category from URL parameter
-const initialCategory = Astro.url.searchParams.get('category') || 'all';
+// Prepare articles data for SolidJS component
+const articlesData = sortedArticles.map(article => ({
+  slug: article.slug,
+  title: article.data.title,
+  description: article.data.description,
+  publishDate: article.data.publishDate.toISOString(),
+  category: article.data.category,
+  tags: article.data.tags || []
+}));
 
 const pageTitle = 'Articles - Philomagi.dev';
 const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。主にアーマードコア6やプログラミングについて書いています。';
@@ -44,151 +48,8 @@ const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。�
       </p>
     </header>
 
-    <!-- Search Box -->
-    <SearchBox />
-
-    <!-- Category Filter -->
-    <section class="flex flex-wrap gap-3 justify-center" id="category-filter">
-      <button
-        data-category="all"
-        class:list={[
-          'category-btn',
-          'px-6',
-          'py-3',
-          'rounded-lg',
-          'transition-all',
-          'duration-300',
-          'font-medium',
-          'tracking-wide',
-          'uppercase',
-          'text-sm',
-          initialCategory === 'all' ? 'category-btn-active' : 'category-btn-inactive'
-        ]}
-      >
-        すべて
-      </button>
-      {categories.map((category) => (
-        <button
-          data-category={category}
-          class:list={[
-            'category-btn',
-            'px-6',
-            'py-3',
-            'rounded-lg',
-            'transition-all',
-            'duration-300',
-            'font-medium',
-            'tracking-wide',
-            'uppercase',
-            'text-sm',
-            initialCategory === category ? 'category-btn-active' : 'category-btn-inactive'
-          ]}
-        >
-          {category}
-        </button>
-      ))}
-    </section>
-
-    <!-- Articles Grid -->
-    <section class="space-y-8">
-      <div id="no-articles" class="text-center py-12 hidden">
-        <p class="text-gray-400 text-lg">該当する記事がありません。</p>
-      </div>
-      <div id="articles-grid" class="grid gap-8 md:gap-12">
-        {sortedArticles.map((article) => {
-            const { slug } = article;
-            const { title, description, publishDate, category, tags } = article.data;
-
-            return (
-              <article
-                class:list={[
-                  'article-item',
-                  'group',
-                  'border',
-                  'border-gray-800',
-                  'rounded-lg',
-                  'p-6',
-                  'hover:border-cyan-500/50',
-                  'transition-all',
-                  'duration-300',
-                  'hover:shadow-lg',
-                  'hover:shadow-cyan-500/10',
-                  { 'hidden': initialCategory !== 'all' && category !== initialCategory }
-                ]}
-                data-category={category}
-                data-title={title.toLowerCase()}
-                data-tags={tags ? tags.join(',').toLowerCase() : ''}
-              >
-                <div class="space-y-4">
-                  <!-- Article Header -->
-                  <div class="space-y-2">
-                    <div class="flex flex-wrap gap-2 items-center text-sm">
-                      <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full font-medium">
-                        {category}
-                      </span>
-                      <time
-                        datetime={publishDate.toISOString()}
-                        class="text-gray-400"
-                      >
-                        {publishDate.toLocaleDateString('ja-JP', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
-                      </time>
-                    </div>
-
-                    <h2 class="text-2xl font-semibold text-white group-hover:text-cyan-400 transition-colors">
-                      <a href={`/articles/${slug}`} class="hover:no-underline">
-                        {title}
-                      </a>
-                    </h2>
-                  </div>
-
-                  <!-- Article Description -->
-                  <p class="text-gray-300 text-lg leading-relaxed">
-                    {description}
-                  </p>
-
-                  <!-- Tags -->
-                  {tags && tags.length > 0 && (
-                    <div class="flex flex-wrap gap-2">
-                      {tags.map((tag: string) => (
-                        <span class="px-2 py-1 text-sm bg-gray-800 text-gray-300 rounded border border-gray-700">
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  <!-- Read More Link -->
-                  <div class="pt-2">
-                    <a
-                      href={`/articles/${slug}`}
-                      class="inline-flex items-center text-cyan-400 hover:text-cyan-300 font-medium transition-colors group"
-                    >
-                      記事を読む
-                      <svg
-                        class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-    </section>
+    <!-- Article Search with SolidJS -->
+    <ArticleSearch articles={articlesData} client:load />
 
     <!-- Back to Home -->
     <div class="text-center pt-8">
@@ -214,132 +75,3 @@ const pageDescription = 'ゲーム、技術、哲学に関する記事一覧。�
     </div>
   </div>
 </Layout>
-
-<style>
-  /* Custom styles for articles page */
-  article {
-    background: linear-gradient(135deg, rgba(31, 41, 55, 0.8) 0%, rgba(17, 24, 39, 0.8) 100%);
-  }
-
-  article:hover {
-    background: linear-gradient(135deg, rgba(31, 41, 55, 0.9) 0%, rgba(17, 24, 39, 0.9) 100%);
-  }
-
-  .article-item.hidden {
-    display: none;
-  }
-
-  /* Category button styles */
-  .category-btn-active {
-    background: linear-gradient(135deg, rgb(6 182 212) 0%, rgb(8 145 178) 100%);
-    color: white;
-    border: 1px solid rgb(6 182 212);
-    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
-    transform: translateY(0);
-  }
-
-  .category-btn-active:hover {
-    background: linear-gradient(135deg, rgb(8 145 178) 0%, rgb(6 182 212) 100%);
-    box-shadow: 0 6px 16px rgba(6, 182, 212, 0.35);
-    transform: translateY(-1px);
-  }
-
-  .category-btn-inactive {
-    background: rgb(17 24 39);
-    color: rgb(156 163 175);
-    border: 1px solid rgb(55 65 81);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    transform: translateY(0);
-  }
-
-  .category-btn-inactive:hover {
-    background: rgb(31 41 55);
-    color: rgb(209 213 219);
-    border-color: rgb(75 85 99);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transform: translateY(-1px);
-  }
-</style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const categoryButtons = document.querySelectorAll('.category-btn');
-    const articleItems = document.querySelectorAll('.article-item');
-    const noArticlesMessage = document.getElementById('no-articles');
-
-    // Filter articles by category
-    function filterArticles(selectedCategory: string) {
-      // Update button states
-      categoryButtons.forEach(btn => {
-        const btnCategory = btn.getAttribute('data-category');
-        if (btnCategory === selectedCategory) {
-          btn.classList.remove('category-btn-inactive');
-          btn.classList.add('category-btn-active');
-        } else {
-          btn.classList.remove('category-btn-active');
-          btn.classList.add('category-btn-inactive');
-        }
-      });
-
-      // Filter articles
-      let visibleCount = 0;
-      articleItems.forEach(article => {
-        const articleCategory = article.getAttribute('data-category');
-        if (selectedCategory === 'all' || articleCategory === selectedCategory) {
-          article.classList.remove('hidden');
-          visibleCount++;
-        } else {
-          article.classList.add('hidden');
-        }
-      });
-
-      // Show/hide no articles message
-      if (visibleCount === 0) {
-        noArticlesMessage?.classList.remove('hidden');
-      } else {
-        noArticlesMessage?.classList.add('hidden');
-      }
-    }
-
-    // Check URL parameters on page load
-    const urlParams = new URLSearchParams(window.location.search);
-    const categoryParam = urlParams.get('category');
-
-    if (categoryParam) {
-      // Check if the category exists in the buttons
-      const categoryExists = Array.from(categoryButtons).some(
-        btn => btn.getAttribute('data-category') === categoryParam
-      );
-
-      if (categoryExists) {
-        filterArticles(categoryParam);
-      }
-    }
-
-    // Add click event listeners to category buttons
-    categoryButtons.forEach(button => {
-      button.addEventListener('click', function(this: HTMLButtonElement) {
-        const selectedCategory = this.getAttribute('data-category');
-
-        if (selectedCategory) {
-          // Filter articles
-          filterArticles(selectedCategory);
-
-          // Update URL
-          const newUrl = selectedCategory === 'all'
-            ? window.location.pathname
-            : `${window.location.pathname}?category=${selectedCategory}`;
-
-          window.history.pushState({ category: selectedCategory }, '', newUrl);
-        }
-      });
-    });
-
-    // Handle browser back/forward buttons
-    window.addEventListener('popstate', function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const categoryParam = urlParams.get('category');
-      filterArticles(categoryParam || 'all');
-    });
-  });
-</script>
