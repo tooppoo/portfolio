@@ -1,6 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import RightArrow from "../../compoonents/icon/RightArrow.astro";
 
 export async function getStaticPaths() {
   const armoredcoreArticles = await getCollection("armoredcore");
@@ -34,17 +35,12 @@ const pageDescription = description;
     <header class="space-y-6 text-center border-b border-gray-800 pb-8">
       <!-- Breadcrumb -->
       <nav class="text-sm">
-        <ol class="flex items-center justify-center space-x-2 text-gray-400">
+        <ol class="list-none flex items-center justify-center space-x-2 text-gray-400">
           <li>
             <a href="/" class="hover:text-white transition-colors">Home</a>
           </li>
           <li>
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clip-rule="evenodd"></path>
-            </svg>
+            <RightArrow />
           </li>
           <li>
             <a href="/articles" class="hover:text-white transition-colors"
@@ -52,12 +48,7 @@ const pageDescription = description;
             >
           </li>
           <li>
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clip-rule="evenodd"></path>
-            </svg>
+            <RightArrow />
           </li>
           <li class="text-white font-medium">{title}</li>
         </ol>
