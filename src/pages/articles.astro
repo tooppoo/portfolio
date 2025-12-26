@@ -8,7 +8,9 @@ const techArticles = await getCollection('tech');
 const philosophyArticles = await getCollection('philosophy');
 
 // Combine all articles
-const allArticles = [...armoredcoreArticles, ...techArticles, ...philosophyArticles];
+const allArticles = [...armoredcoreArticles, ...techArticles, ...philosophyArticles].filter(
+  (article) => !article.data.draft
+);
 
 // Sort articles by publish date (newest first)
 const sortedArticles = allArticles.sort(

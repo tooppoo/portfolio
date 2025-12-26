@@ -9,6 +9,7 @@ const baseArticleScheme = ({ category }: { category: string }) => ({
     category: z.literal(category),
     tags: z.array(z.string()).optional().default([]),
     layout: z.string().optional().default('../layouts/Layout.astro'),
+    draft: z.boolean().optional().default(false),
   }),
 } as const)
 
