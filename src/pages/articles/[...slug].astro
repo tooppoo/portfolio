@@ -1,7 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-import RightArrow from "../../compoonents/icon/RightArrow.astro";
+import RightArrow from "../../components/icon/RightArrow.astro";
 
 export async function getStaticPaths() {
   const armoredcoreArticles = await getCollection("armoredcore");
