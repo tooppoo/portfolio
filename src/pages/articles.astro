@@ -9,9 +9,14 @@ const techArticles = await getCollection('tech');
 const philosophyArticles = await getCollection('philosophy');
 
 // Combine all articles
-const allArticles = [...armoredcoreArticles, ...techArticles, ...philosophyArticles].filter(
-  (article) => !article.data.draft
-);
+const allArticles = ((isProd: boolean) => {
+  const whole = [...armoredcoreArticles, ...techArticles, ...philosophyArticles]
+  const filter = isProd
+    ? (article: typeof whole[number]) => !article.data.draft
+    : () => true;
+
+  return whole.filter(filter);
+})(import.meta.env.MODE === "production")
 
 // Sort articles by publish date (newest first)
 const sortedArticles = allArticles.sort(
