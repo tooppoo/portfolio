@@ -235,4 +235,10 @@ const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURICompon
     color: rgb(77 234 255);
     text-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
   }
+
+  /* Footnote references: add spacing when multiple are adjacent */
+  article :global(sup + sup) {
+    margin-left: 0.3em;
+  }
+
 </style>
