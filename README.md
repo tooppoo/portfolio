@@ -1,46 +1,44 @@
-# Astro Starter Kit: Basics
+# Philomagi.dev
 
-```sh
-pnpm create astro@latest -- --template basics
-```
+個人サイト兼ポートフォリオ。ゲーム（アーマードコア）、技術、哲学の文章を掲載するAstro製の静的サイト。
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## サイト構成
 
-## 🚀 Project Structure
+- `/`: トップページ（自己紹介と外部リンク）
+- `/articles`: 記事一覧（カテゴリ横断）
+- `/articles/{slug}`: 記事本文
 
-Inside of your Astro project, you'll see the following folders and files:
+## コンテンツ
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+- 収録カテゴリ: `armoredcore`, `tech`, `philosophy`
+- 記事ファイル: `src/content/<category>/YYYY-MM-DD_タイトル.mdx`
+- Frontmatter: `title`, `description`, `publishDate`, `category`, `tags`, `draft`
+- `draft: true` は production ビルドで非表示
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 主要ディレクトリ
 
-## 🧞 Commands
+- `src/content`: MDX記事
+- `src/pages`: ルーティング
+- `src/layouts`: 共通レイアウト
+- `src/components`: UI/検索コンポーネント
+- `public`: 静的アセット
 
-All commands are run from the root of the project, from a terminal:
+## 開発
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+| Command | Action |
+| :-- | :-- |
+| `pnpm install` | 依存関係のインストール |
+| `pnpm dev` | 開発サーバー起動（`http://localhost:4321`） |
+| `pnpm build` | 本番ビルドを `dist/` に出力 |
+| `pnpm preview` | `dist/` を `wrangler dev` で確認 |
+| `pnpm deploy` | Cloudflare Workers へデプロイ |
+| `pnpm md:lint` | Markdown lint |
 
-## 👀 Want to learn more?
+## デプロイ
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- `pnpm deploy` は `astro build` 後に `wrangler deploy` を実行
+- 本番アセットは `dist/` を Cloudflare Workers の static assets として配信
+
+## ライセンス
+
+CC BY-ND 4.0（Creative Commons Attribution-NoDerivatives 4.0 International）
