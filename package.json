@@ -32,7 +32,7 @@
 		"markdownlint-cli2": "0.20.0",
 		"markdownlint-cli2-formatter-pretty": "0.0.9",
 		"sharp": "0.34.5",
-		"tailwindcss": "3.4.19",
+		"tailwindcss": "4.1.18",
 		"wrangler": "4.59.1"
 	},
 	"license": "CC-BY-ND-4.0"
