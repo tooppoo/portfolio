@@ -7,7 +7,8 @@ export async function getStaticPaths() {
   const armoredcoreArticles = await getCollection("armoredcore");
   const techArticles = await getCollection("tech");
   const philosophyArticles = await getCollection("philosophy");
-  const allArticles = [...armoredcoreArticles, ...techArticles, ...philosophyArticles];
+  const noteArticles = await getCollection("note");
+  const allArticles = [...armoredcoreArticles, ...techArticles, ...philosophyArticles, ...noteArticles];
 
   return allArticles.map((article) => ({
     params: { slug: article.slug },
@@ -16,7 +17,7 @@ export async function getStaticPaths() {
 }
 
 interface Props {
-  article: CollectionEntry<"armoredcore"> | CollectionEntry<"tech"> | CollectionEntry<"philosophy">;
+  article: CollectionEntry<"armoredcore"> | CollectionEntry<"tech"> | CollectionEntry<"philosophy"> | CollectionEntry<"note">;
 }
 
 const { article } = Astro.props;

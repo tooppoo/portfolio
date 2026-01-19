@@ -7,10 +7,11 @@ import ArticleSearch from '../components/search/ArticleSearch';
 const armoredcoreArticles = await getCollection('armoredcore');
 const techArticles = await getCollection('tech');
 const philosophyArticles = await getCollection('philosophy');
+const noteArticles = await getCollection('note');
 
 // Combine all articles
 const allArticles = ((isProd: boolean) => {
-  const whole = [...armoredcoreArticles, ...techArticles, ...philosophyArticles]
+  const whole = [...armoredcoreArticles, ...techArticles, ...philosophyArticles, ...noteArticles]
   const filter = isProd
     ? (article: typeof whole[number]) => !article.data.draft
     : () => true;
