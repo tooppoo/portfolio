@@ -8,10 +8,11 @@ const armoredcoreArticles = await getCollection('armoredcore');
 const techArticles = await getCollection('tech');
 const philosophyArticles = await getCollection('philosophy');
 const noteArticles = await getCollection('note');
+const politicsArticles = await getCollection('politics');
 
 // Combine all articles
 const allArticles = ((isProd: boolean) => {
-  const whole = [...armoredcoreArticles, ...techArticles, ...philosophyArticles, ...noteArticles]
+  const whole = [...armoredcoreArticles, ...techArticles, ...philosophyArticles, ...politicsArticles, ...noteArticles]
   const filter = isProd
     ? (article: typeof whole[number]) => !article.data.draft
     : () => true;
