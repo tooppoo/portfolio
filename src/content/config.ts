@@ -25,10 +25,14 @@ const philosophyCollection = defineCollection(baseArticleScheme({
 const noteCollection = defineCollection(baseArticleScheme({
   category: 'note',
 }));
+const politicsCollection = defineCollection(baseArticleScheme({
+  category: 'politics',
+}));
 
 export const collections = {
   armoredcore: armoredcoreCollection,
   tech: techArchitectCollection,
   philosophy: philosophyCollection,
   note: noteCollection,
+  politics: politicsCollection,
 };
